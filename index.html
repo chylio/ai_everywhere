@@ -5,39 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 奇美醫院數位賦能創意應用競賽</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutral with Muted Blue Accent -->
-    <!-- Application Structure Plan: A top-down, single-page application with a sticky navigation bar for quick access to key sections: Overview, Competition Details, Schedule & Rules, Scoring & Prizes, and Resources. This structure is chosen for its simplicity and user-friendliness, allowing participants to either scroll through all information sequentially or jump directly to the section of interest. Interactive tabs are used for the 'Competition Details' to prevent information overload and allow for easy comparison between competition groups. Interactive charts are used for prizes and scoring to make quantitative data more digestible and impactful. -->
-    <!-- Visualization & Content Choices: 
-        - Competition Groups -> Goal: Organize/Compare -> Viz: Tabbed Interface -> Interaction: Click to switch content -> Justification: Allows users to focus on specific competition tracks without being overwhelmed.
-        - Prizes -> Goal: Compare -> Viz: Bar Chart (Chart.js) -> Interaction: Hover for tooltips -> Justification: Provides a quick, powerful visual comparison of prize money across different categories.
-        - Scoring Criteria -> Goal: Show Proportions -> Viz: Donut Chart (Chart.js) -> Interaction: Hover for tooltips -> Justification: Clearly illustrates the weight of each criterion in the final score.
-        - Schedule -> Goal: Show Sequence -> Viz: Vertical Timeline (HTML/CSS) -> Interaction: None -> Justification: More visually engaging and easier to follow than a simple list of dates.
-        - Appendix Table -> Goal: Inform -> Viz: Styled HTML Table -> Interaction: None -> Justification: Presents structured data in a clear, readable format.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #FDFBF7;
             color: #4A4A4A;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
         }
         .nav-link {
             transition: color 0.3s, border-bottom-color 0.3s;
@@ -52,18 +25,23 @@
         }
         .tab-btn {
             transition: background-color 0.3s, color 0.3s;
+            min-width: 180px;
         }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2.75rem;
-            top: 0.25rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            background-color: #FFFFFF;
-            border: 4px solid #3B82F6;
+        .score-card {
+            box-shadow: 0 2px 8px #eaeaea;
         }
+        .center-title { text-align: center !important; }
+        .center-cards { justify-content: center; }
+        .wide-card { min-width: 370px; max-width: 430px; width: 100%; }
+        .bonus-info {
+            background: linear-gradient(90deg, #e0e7ff 0%, #f3f4fd 100%);
+            border-left: 8px solid #6366f1;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px #eaeaea;
+        }
+        .prize-flex { display: flex; flex-direction: column; gap: 2.5rem; }
+        @media (min-width: 1000px) { .prize-flex { flex-direction: row; } }
+        .nowrap-title { white-space: nowrap; }
     </style>
 </head>
 <body class="antialiased">
@@ -71,16 +49,17 @@
     <!-- Header & Navigation -->
     <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800">奇美醫院競賽</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800 center-title">奇美醫院競賽</h1>
             <div class="hidden md:flex space-x-8">
                 <a href="#overview" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">總覽</a>
                 <a href="#details" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">競賽詳情</a>
                 <a href="#schedule" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">時程與規則</a>
                 <a href="#scoring" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">評分與獎勵</a>
+                <a href="#reward" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">競賽獎勵</a>
                 <a href="#resources" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">參考資料</a>
             </div>
             <button id="mobile-menu-button" class="md:hidden focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
             </button>
         </nav>
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
@@ -88,6 +67,7 @@
             <a href="#details" class="block py-2 text-gray-600">競賽詳情</a>
             <a href="#schedule" class="block py-2 text-gray-600">時程與規則</a>
             <a href="#scoring" class="block py-2 text-gray-600">評分與獎勵</a>
+            <a href="#reward" class="block py-2 text-gray-600">競賽獎勵</a>
             <a href="#resources" class="block py-2 text-gray-600">參考資料</a>
         </div>
     </header>
@@ -96,17 +76,17 @@
 
         <!-- Section 1: Overview -->
         <section id="overview" class="mb-24 text-center">
-            <h2 class="text-4xl font-bold text-blue-600 mb-4">2025 奇美醫院數位賦能創意應用競賽</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-                本競賽旨在推動生成式AI於臨床照護的應用，並配合本院推動HIS Copilot，培養同仁整合生成式AI與臨床協作之能力。我們導入學習型健康系統(LHS)精神，強調資料驅動、回饋循環與持續改善，期能透過本次競賽推動院內智慧照護發展。
+            <h2 class="text-4xl font-bold text-blue-600 mb-4 center-title">2025 奇美醫院數位賦能創意應用競賽</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto center-title">
+                本競賽旨在推動生成式AI於臨床照護的應用，並配合本院推動HIS Copilot，培養同仁整合生成式AI與臨床協作之能力。我們導入學習型健康系統（LHS）概念，鼓勵同仁發揮創意，提出具體可行的解決方案，提升醫療服務品質與效率。
             </p>
             <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">經典賽</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3 center-title">經典賽</h3>
                     <p class="text-gray-600">【Prompt由你設計，專業由你定義】<br>擇一組別，運用AI工具完成臨床個案報告、出院準備服務計畫書或生活型態建議。</p>
                 </div>
                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">加碼賽</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3 center-title">加碼賽</h3>
                     <p class="text-gray-600">【照護由你啟動，影音讓醫病更靠近】<br>將經典賽成果轉製為易懂的衛教影音，完成即可獲加碼獎金。</p>
                 </div>
             </div>
@@ -114,82 +94,149 @@
 
         <!-- Section 2: Competition Details -->
         <section id="details" class="mb-24">
-            <h2 class="text-3xl font-bold text-center mb-12">競賽詳情</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">本競賽分為「經典賽」與「加碼賽」。經典賽是主要賽事，參賽者需從三個專業組別中擇一參加，展現AI協作的專業能力。加碼賽則鼓勵團隊將專業成果轉化為親民的衛教影音，拉近醫病距離。點擊下方頁籤以深入了解各組別的目標與任務。</p>
+            <h2 class="text-3xl font-bold mb-8 center-title">競賽詳情</h2>
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100">
-                <div class="mb-8 flex flex-wrap justify-center gap-2">
-                    <button class="tab-btn active px-4 py-2 font-semibold rounded-lg" data-tab="tab1">臨床個案報告組</button>
+                <div class="mb-8 flex justify-center gap-14">
+                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab1">臨床個案報告組</button>
                     <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab2">出院準備服務導航組</button>
                     <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab3">生活型態設計組</button>
                     <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab4">加碼賽</button>
                 </div>
+                <!-- 標題在顏色卡片外面，內容卡片顏色區塊 -->
                 <div id="tab-content" class="min-h-[250px]">
-                    <div id="tab1" class="tab-pane active">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">臨床個案報告組</h3>
-                        <p class="text-gray-600">結合電子病歷資料與「巡房大聯盟」中的任一平台，完成一份符合指定 Case Reports 格式的個案報告，內容需包含摘要、背景、案例敘述、檢查、治療、討論、學習重點等。此組別考驗參賽者運用AI整理與撰寫複雜臨床資訊的能力。</p>
+                  <!-- 臨床個案報告組 -->
+                  <div id="tab1" class="tab-pane active">
+                    <div class="w-full md:w-[1200px] mx-auto">
+                      <h3 class="text-2xl font-bold text-blue-800 mb-4">臨床個案報告組</h3>
+                      <div class="bg-[#eaf3fd] border-l-8 border-blue-400 rounded-xl shadow p-8 text-left">
+                        <h4 class="text-xl font-bold text-blue-700 mb-3">組別說明</h4>
+                        <p class="text-gray-700 font-semibold mb-4">
+                          臨床個案報告，結合電子病歷資料與「巡房大聯盟」中的任一平台，完成一份符合指定Case Reports格式的個案報告（含摘要、背景、案例敘述、檢查、治療、討論、學習重點等）。
+                        </p>
+                        <div class="bg-blue-100 rounded-lg p-3 my-2">
+                          <span class="font-bold text-blue-800">參考資料：</span>
+                          <a class="ref-link" href="https://casereports.bmj.com/pages/authors/#how_to_write" target="_blank">https://casereports.bmj.com/pages/authors/#how_to_write</a>
+                        </div>
+                      </div>
                     </div>
-                    <div id="tab2" class="tab-pane hidden">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">出院準備服務導航組</h3>
-                        <p class="text-gray-600">產出具全面性、整合性的「出院準備服務計畫書」。需結合醫師、護理師、營養師、社工師、物理治療師等多專業角色的照護建議，建立跨專業、連續性的出院準備服務計畫，提供病人及其家屬全面性的支持。</p>
+                  </div>
+                  <!-- 出院準備服務導航組 -->
+                  <div id="tab2" class="tab-pane hidden">
+                    <div class="w-full md:w-[1200px] mx-auto">
+                      <h3 class="text-2xl font-bold text-green-800 mb-4">出院準備服務導航組</h3>
+                      <div class="bg-[#eafbf3] border-l-8 border-green-400 rounded-xl shadow p-8 text-left">
+                        <h4 class="text-xl font-bold text-green-700 mb-3">組別說明</h4>
+                        <p class="text-gray-700 font-semibold mb-4">
+                          產出具全面性、整合性的「出院準備服務計畫書 」結合醫師、專師、護理師、營養師、社工師、物理治療師、出院準備專責護理師等多專業角色的照護建議之資訊需求，建立跨專業、連續性的出院準備服務計畫書，提供全面、整合性的服務，協助病人及其家屬順利過渡到出院後的居家生活，並獲得持續性的支持和照護。
+                        </p>
+                        <div class="bg-green-100 rounded-lg p-3 my-2">
+                          <span class="font-bold text-green-800">參考資料：</span>
+                          <a class="ref-link" href="https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html" target="_blank">https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html</a>
+                        </div>
+                      </div>
                     </div>
-                    <div id="tab3" class="tab-pane hidden">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">生活型態設計組</h3>
-                        <p class="text-gray-600">聚焦於慢性病個案，以電子病歷資料出發，產出「個人生活型態建議」。此組別旨在培育同仁撰寫高品質Prompt的能力，透過大型語言模型(LLM)協作，精準指引系統產出個人化、適用於病人與家屬的生活型態建議。</p>
+                  </div>
+                  <!-- 生活型態設計組 -->
+                  <div id="tab3" class="tab-pane hidden">
+                    <div class="w-full md:w-[1200px] mx-auto">
+                      <h3 class="text-2xl font-bold text-orange-700 mb-4">生活型態設計組</h3>
+                      <div class="bg-[#fef6ee] border-l-8 border-orange-400 rounded-xl shadow p-8 text-left">
+                        <h4 class="text-xl font-bold text-orange-700 mb-3">組別說明</h4>
+                        <p class="text-gray-700 font-semibold mb-4">
+                          根據疾病狀態產出「個人生活型態建議」以電子病歷資料出發，聚焦於慢性病個案，強化對生活型態醫學介入策略之理解與連結，同時培育同仁撰寫高品質Prompt的能力，透過大型語言模型（LLM）協作具臨床價值的資訊與建議，精準指引「HIS Copilot」系統產出個人化、適用於病人與家屬的生活型態建議，協助病人在就醫間隔期間進行自我健康管理與行為改變。
+                        </p>
+                        <div class="bg-orange-100 rounded-lg p-3 my-2">
+                          <span class="font-bold text-orange-700">參考資料：</span>
+                          <a class="ref-link" href="https://journals.sagepub.com/doi/full/10.1177/15598276251325488" target="_blank">https://journals.sagepub.com/doi/full/10.1177/15598276251325488</a>
+                        </div>
+                      </div>
                     </div>
-                    <div id="tab4" class="tab-pane hidden">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-4">加碼賽：照護由你啟動，影音讓醫病更靠近</h3>
-                        <p class="text-gray-600">此為自由參賽項目。完成經典賽的隊伍，可透過各類生成式AI多媒體工具，將已完成的「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔，並可用於病人衛教、門診播放、遠距照護中。</p>
+                  </div>
+                  <!-- 加碼賽：正確內容 -->
+                  <div id="tab4" class="tab-pane hidden">
+                    <div class="w-full md:w-[1200px] mx-auto">
+                      <h3 class="text-2xl font-bold text-indigo-900 mb-4">加碼賽：照護由你啟動，影音讓醫病更靠近</h3>
+                      <div class="bg-[#f2f3fe] border-l-8 border-indigo-400 rounded-xl shadow p-8 text-left">
+                        <h4 class="text-xl font-bold text-indigo-700 mb-3">加碼獎金說明</h4>
+                        <p class="text-gray-700 font-semibold mb-4">
+                          透過各類生成式AI多媒體工具，將已完成的「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔，並可於病人衛教、門診播放、遠距照護中使用。
+                          <br><span class="font-bold block mt-2">可自由參賽，若完成經典賽且繳交影音作品可獲得加碼獎金 <span class="text-indigo-700 font-extrabold text-xl">2,000元</span>。</span>
+                        </p>
+                        <ul class="mt-2 text-indigo-700 list-disc list-inside">
+                          <li>不限專業、自由參與</li>
+                          <li>可個人或組隊（經典賽完成後皆可參加）</li>
+                          <li>作品需以AI工具產出影音，內容需易於病人與家屬理解</li>
+                          <li>可應用於病人衛教/門診播放/遠距照護</li>
+                        </ul>
+                      </div>
                     </div>
+                  </div>
                 </div>
             </div>
         </section>
 
         <!-- Section 3: Schedule & Rules -->
         <section id="schedule" class="mb-24">
-            <h2 class="text-3xl font-bold text-center mb-12">時程與規則</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">掌握關鍵時程與競賽規則是成功的第一步。本區塊詳細列出從報名到各組別競賽日的完整時程，以及重要的參賽規則，請所有團隊務必詳閱。</p>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Timeline -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 text-gray-800">競賽時程</h3>
-                    <div class="relative border-l-4 border-blue-200 pl-12">
-                        <div class="timeline-item mb-12">
-                            <p class="font-bold text-lg text-blue-600">即日起至 2025/09/01 (一) 17:00</p>
-                            <p class="text-gray-700">報名期間</p>
-                        </div>
-                        <div class="timeline-item mb-12">
-                            <p class="font-bold text-lg text-blue-600">2025/10/02 (四)</p>
-                            <p class="text-gray-700">【臨床個案報告組】競賽日</p>
-                        </div>
-                        <div class="timeline-item mb-12">
-                            <p class="font-bold text-lg text-blue-600">2025/10/09 (四)</p>
-                            <p class="text-gray-700">【出院準備服務導航組】競賽日</p>
-                        </div>
-                        <div class="timeline-item mb-12">
-                            <p class="font-bold text-lg text-blue-600">2025/10/23 (四)</p>
-                            <p class="text-gray-700">【生活型態設計組】競賽日</p>
-                        </div>
-                        <div class="timeline-item">
-                            <p class="font-bold text-lg text-blue-600">另行通知</p>
-                            <p class="text-gray-700">【加碼賽】時程</p>
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6 section-title text-left">時程與規則</h2>
+                <p class="text-lg text-gray-600 mb-12 section-desc text-left">
+                    掌握關鍵時程與競賽規則是成功的第一步。本區塊詳細列出從報名到各組別競賽日的完整流程與規則。
+                </p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-8 text-gray-800 section-title">競賽時程</h3>
+                        <div class="relative border-l-4 border-blue-200 pl-12">
+                            <div class="timeline-item mb-12">
+                                <p class="font-bold text-lg text-blue-600">即日起至 2025/09/01 (一) 17:00</p>
+                                <p class="text-gray-700">報名期間</p>
+                            </div>
+                            <div class="timeline-item mb-12">
+                                <p class="font-bold text-lg text-blue-600">2025/10/02 (四)</p>
+                                <p class="text-gray-700">【臨床個案報告組】競賽日</p>
+                            </div>
+                            <div class="timeline-item mb-12">
+                                <p class="font-bold text-lg text-blue-600">2025/10/09 (四)</p>
+                                <p class="text-gray-700">【出院準備服務導航組】競賽日</p>
+                            </div>
+                            <div class="timeline-item mb-12">
+                                <p class="font-bold text-lg text-blue-600">2025/10/23 (四)</p>
+                                <p class="text-gray-700">【生活型態設計組】競賽日</p>
+                            </div>
+                            <div class="timeline-item">
+                                <p class="font-bold text-lg text-blue-600">另行通知</p>
+                                <p class="text-gray-700">【加碼賽】時程</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Rules -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 text-gray-800">參賽規則</h3>
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-                            <h4 class="font-bold text-lg mb-2">組隊要求</h4>
-                            <p>每組 3 人，須為跨單位組隊 (至少3個不同專業/科別)。全院同仁皆可參加。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-                            <h4 class="font-bold text-lg mb-2">競賽方式</h4>
-                            <p>使用本院已架構之生成式AI工具，當日抽籤指定個案並產出組別成果。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-                            <h4 class="font-bold text-lg mb-2">發表形式</h4>
-                            <p>成果以簡報呈現，每組現場發表 10 分鐘。</p>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-8 text-gray-800 section-title">參賽規則</h3>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                                <h4 class="font-bold text-lg mb-2 section-title">組隊要求</h4>
+                                <p>每組 3 人，須為跨單位組隊 (至少3個不同專業/科別)。</p>
+                                <p>全院同仁皆可參加。</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                                <h4 class="font-bold text-lg mb-2 section-title">競賽方式</h4>
+                                <div class="mb-4">
+                                    <span class="score-label text-blue-700">經典賽</span>
+                                    <ul class="list-disc pl-5 text-gray-700 mt-2 mb-2 leading-relaxed">
+                                        <li>使用本院已架構之生成式AI工具，如：奇幫手、巡房大聯盟中各職類GAI平台、我要問、繼續問介面協作，當日抽籤指定個案並產出組別的成果如「個人生活型態建議」、「出院準備服務計畫書」或「臨床個案報告」。</li>
+                                        <li>參考資料：<span class="text-blue-700 font-bold">巡防大聯盟操作可參考院內影音平台→數位技能</span></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <span class="score-label text-indigo-700">加碼賽</span>
+                                    <ul class="list-disc pl-5 text-gray-700 mt-2 leading-relaxed">
+                                        <li>完成經典賽可自由選擇繼續參與加碼賽。</li>
+                                        <li>透過各類生成式AI多媒體工具，將「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                                <h4 class="font-bold text-lg mb-2 section-title">發表形式</h4>
+                                <p>成果以簡報呈現，每組現場發表 10 分鐘。</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -198,50 +245,171 @@
 
         <!-- Section 4: Scoring & Prizes -->
         <section id="scoring" class="mb-24">
-            <h2 class="text-3xl font-bold text-center mb-12">評分與獎勵</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">豐厚的獎勵等待著優秀的團隊！本區塊將透過圖表清晰展示各組別的獎金結構與評分標準，讓您一目了然地了解評審的重點以及爭取高分的關鍵。</p>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <!-- Prizes -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 text-center text-gray-800">競賽獎勵</h3>
-                    <div class="mb-12">
-                        <h4 class="text-xl font-semibold text-center mb-4">經典賽獎金 (元)</h4>
-                        <div class="chart-container h-96">
-                            <canvas id="classicPrizesChart"></canvas>
+            <h2 class="text-3xl font-bold mb-12 center-title">經典賽評分標準 <span class="text-base font-normal text-gray-500">100%</span></h2>
+            <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+                <div class="flex flex-col md:flex-row gap-8 center-cards">
+                    <!-- 卡片1：Prompt設計結構 -->
+                    <div class="wide-card bg-white rounded-xl shadow score-card p-6 border border-blue-100">
+                        <div class="flex items-center mb-2 flex-col items-start">
+                            <div class="flex items-center">
+                                <span class="text-2xl font-bold text-blue-700 nowrap-title">Prompt設計結構</span>
+                                <span class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-lg font-bold mx-2">45%</span>
+                            </div>
+                            <span class="mt-1 text-base text-gray-500">參考CO-STAR架構</span>
+                        </div>
+                        <table class="w-full mt-2 border-collapse rounded-xl overflow-hidden">
+                            <thead class="bg-blue-50">
+                                <tr>
+                                    <th class="py-3 px-2 font-bold text-gray-700 border-b border-gray-200 text-left w-1/4">評分項目</th>
+                                    <th class="py-3 px-2 font-bold text-gray-700 border-b border-gray-200 text-left w-2/4">說明</th>
+                                    <th class="py-3 px-2 font-bold text-gray-700 border-b border-gray-200 text-center w-1/8">配分</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                <tr>
+                                    <td class="py-2 px-2 border-b border-gray-100">角色與任務明確性</td>
+                                    <td class="py-2 px-2 border-b border-gray-100">明確設定模型的角色與目標任務，使模型具備清楚的立場與任務導向。</td>
+                                    <td class="py-2 px-2 border-b border-gray-100 text-center font-bold text-blue-700">15</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-2 border-b border-gray-100">輸入與輸出格式設計</td>
+                                    <td class="py-2 px-2 border-b border-gray-100">輸入資料或內容與輸出格式明確，提升模型解析與穩定性、迴代次數、回應內容查驗與改寫紀錄。</td>
+                                    <td class="py-2 px-2 border-b border-gray-100 text-center font-bold text-blue-700">10</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-2 border-b border-gray-100">語氣與適用性控制</td>
+                                    <td class="py-2 px-2 border-b border-gray-100">明確設定輸出語氣與閱讀對象（病人/專業人員），確保內容適切性。</td>
+                                    <td class="py-2 px-2 border-b border-gray-100 text-center font-bold text-blue-700">10</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-2 border-b border-gray-100">範例使用</td>
+                                    <td class="py-2 px-2 border-b border-gray-100">善用示例資料引導模型產出一致風格，增加穩定性與準確度。</td>
+                                    <td class="py-2 px-2 border-b border-gray-100 text-center font-bold text-blue-700">5</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-2">限制與安全性設定</td>
+                                    <td class="py-2 px-2">明確長度、內容、避免誤訊息的限制說明。</td>
+                                    <td class="py-2 px-2 text-center font-bold text-blue-700">5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 卡片2：輸出成果正確性・完整性 -->
+                    <div class="wide-card rounded-xl shadow score-card p-6 border border-green-100 bg-white">
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl font-bold text-green-700 nowrap-title">輸出成果正確性・完整性</span>
+                            <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-lg font-bold mx-2">45%</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="rounded-xl border border-green-200 bg-green-50 p-4">
+                                <span class="font-bold text-green-700 text-lg block mb-1">臨床個案報告組</span>
+                                <span class="text-gray-800">臨床個案報告（含摘要、背景、案例敘述、檢查、治療、討論、學習重點等）。</span>
+                            </div>
+                            <div class="rounded-xl border border-blue-200 bg-blue-50 p-4">
+                                <span class="font-bold text-blue-700 text-lg block mb-1">出院準備服務導航組</span>
+                                <span class="text-gray-800">出院準備服務計畫書：參考國際、國內相關指引，整合醫療及社會資源，考量個別性照護需求並訂規劃（如：居家護理、復能、端息、復健、輔具需求），以保障持續性、就近性的照護。</span>
+                            </div>
+                            <div class="rounded-xl border border-orange-200 bg-orange-50 p-4">
+                                <span class="font-bold text-orange-700 text-lg block mb-1">生活型態設計組</span>
+                                <span class="text-gray-800">個人生活型態建議（參考附件）：考量個案的健康社會決定因素，利用S.M.A.R.T.目標設定格式讓建議具備可行性、行動計畫與策略、評估與追蹤方式。</span>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h4 class="text-xl font-semibold text-center mb-4">加碼賽獎金 (元)</h4>
-                        <div class="chart-container h-80">
-                            <canvas id="addOnPrizesChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <!-- Scoring -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 text-center text-gray-800">評分標準</h3>
-                    <div class="mb-12">
-                        <h4 class="text-xl font-semibold text-center mb-4">經典賽評分權重</h4>
-                        <div class="chart-container h-80">
-                            <canvas id="classicScoringChart"></canvas>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-xl font-semibold text-center mb-4">加碼賽評分權重</h4>
-                        <div class="chart-container h-80">
-                            <canvas id="addOnScoringChart"></canvas>
+                    <!-- 卡片3：報告流暢度・資料完整性 -->
+                    <div class="wide-card rounded-xl shadow score-card p-6 border border-orange-100 bg-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl font-bold text-orange-700 nowrap-title">報告流暢度・資料完整性</span>
+                                <span class="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-lg font-bold mx-2">10%</span>
+                            </div>
+                            <div class="rounded-lg bg-orange-50 p-3 text-gray-800 mt-2 text-center">
+                                報告內容結構合理、語句流暢、資料呈現完整，易於理解與後續應用。
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 5: Resources -->
+        <!-- Section 5: Rewards -->
+        <section id="reward" class="mb-24">
+            <h2 class="text-3xl font-bold mb-8 center-title">競賽獎勵</h2>
+            <div class="max-w-7xl mx-auto my-12 flex flex-col md:flex-row gap-12 items-start">
+              <!-- 左側：經典賽獎金 -->
+              <div class="flex-1 min-w-[380px]">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 section-title">經典賽獎金 (元)</h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-center border-collapse bg-white rounded-lg shadow">
+                    <thead class="bg-gray-100">
+                      <tr>
+                        <th class="p-3 border-b-2 border-gray-200">組別</th>
+                        <th class="p-3 border-b-2 border-gray-200">金獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">銀獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">銅獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">佳作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 border-b border-gray-200 font-semibold">臨床個案報告組</td>
+                        <td class="p-3 border-b border-gray-200 text-blue-600">5,000</td>
+                        <td class="p-3 border-b border-gray-200 text-blue-600">4,000</td>
+                        <td class="p-3 border-b border-gray-200 text-blue-600">3,000</td>
+                        <td class="p-3 border-b border-gray-200 text-blue-600">2,000</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 border-b border-gray-200 font-semibold">出院準備服務導航組</td>
+                        <td class="p-3 border-b border-gray-200 text-green-600">10,000</td>
+                        <td class="p-3 border-b border-gray-200 text-green-600">8,000</td>
+                        <td class="p-3 border-b border-gray-200 text-green-600">5,000</td>
+                        <td class="p-3 border-b border-gray-200 text-green-600">3,000</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 border-b border-gray-200 font-semibold">生活型態設計組</td>
+                        <td class="p-3 border-b border-gray-200 text-orange-600">20,000</td>
+                        <td class="p-3 border-b border-gray-200 text-orange-600">15,000</td>
+                        <td class="p-3 border-b border-gray-200 text-orange-600">10,000</td>
+                        <td class="p-3 border-b border-gray-200 text-orange-600">5,000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- 右側：加碼賽獎金 -->
+              <div class="flex-1 min-w-[380px]">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 section-title">加碼賽獎金 (元)</h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-center border-collapse bg-white rounded-lg shadow">
+                    <thead class="bg-gray-100">
+                      <tr>
+                        <th class="p-3 border-b-2 border-gray-200">獎項</th>
+                        <th class="p-3 border-b-2 border-gray-200">金獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">銀獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">銅獎</th>
+                        <th class="p-3 border-b-2 border-gray-200">佳作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="p-3 border-b border-gray-200 font-semibold">加碼賽</td>
+                        <td class="p-3 border-b border-gray-200 text-indigo-600">5,000</td>
+                        <td class="p-3 border-b border-gray-200 text-indigo-600">4,000</td>
+                        <td class="p-3 border-b border-gray-200 text-indigo-600">3,000</td>
+                        <td class="p-3 border-b border-gray-200 text-indigo-600">2,000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Resources -->
         <section id="resources" class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-12">參考資料</h2>
-             <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">為了協助參賽者更好地準備，我們提供了「個人生活型態建議書」的範例附件。此範例展示了如何運用S.M.A.R.T.原則設定具體、可衡量的健康目標，請參賽者（特別是生活型態設計組）詳閱，以了解成果的期望格式與深度。</p>
+            <h2 class="text-3xl font-bold mb-12 section-title">參考資料</h2>
+            <p class="text-lg text-gray-600 section-desc mb-12">為了協助參賽者更好地準備，我們提供了「個人生活型態建議書」的範例附件。此範例展示了建議書的撰寫方式，供各組參考。</p>
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 overflow-x-auto">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">附件：個人生活型態建議書</h3>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 section-title">附件：個人生活型態建議書</h3>
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-100">
                         <tr>
@@ -255,37 +423,37 @@
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">營養</td>
                             <td class="p-4 border-b border-gray-200">採用以全食物、植物為主的飲食，每日至少五份蔬果</td>
-                            <td class="p-4 border-b border-gray-200">S: 依個人經濟與文化背景，採用以全食物、植物為主的飲食，每日至少攝取5份蔬果<br>M: 透過每日飲食紀錄追蹤蔬果攝取量與三餐內容<br>A: 與營養師設計可行菜單並實行<br>R: 改善飲食有助於控制血糖與體重<br>T: 在4週內完成初步飲食轉換並持續執行</td>
+                            <td class="p-4 border-b border-gray-200">S: 依個人經濟與文化背景，採用以全食物、植物為主的飲食，每日至少攝取5份蔬果<br>M: 透過每日飲食紀錄追蹤攝取量<br>A: 根據個人情況調整<br>R: 改善健康指標<br>T: 每月回診檢視順從度</td>
                             <td class="p-4 border-b border-gray-200">每日飲食紀錄、體重追蹤，每月回診檢視順從度</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">運動</td>
                             <td class="p-4 border-b border-gray-200">每週150分鐘中度有氧運動、每週2次肌力訓練</td>
-                            <td class="p-4 border-b border-gray-200">S: 每週進行快走並搭配2次居家肌力訓練<br>M: 使用APP或紙本紀錄每週運動次數與步數(目標150分鐘與7000步/天)<br>A: 運動強度依個人體能調整，循序漸進<br>R: 有助於改善胰島素敏感性與血糖控制<br>T: 6週內養成穩定運動習慣並每週追蹤</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週進行快走並搭配2次居家肌力訓練<br>M: 使用APP或紙本紀錄每週運動次數與步數(目標150分鐘與7000步)<br>A: 按個人身體狀況調整<br>R: 增強心肺功能<br>T: 每月追蹤運動頻率</td>
                             <td class="p-4 border-b border-gray-200">運動日誌記錄、步數紀錄、每月活動頻率統計</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">睡眠</td>
                             <td class="p-4 border-b border-gray-200">每晚睡眠目標7-8小時，建立固定作息</td>
-                            <td class="p-4 border-b border-gray-200">S: 建立規律作息，每晚睡7-8小時<br>M: 以睡眠日誌或裝置記錄睡眠時數與品質<br>A: 若夜班工作或照顧家人無法達標，調整為日間短眠策略並轉介睡眠衛教<br>R: 提升睡眠有助於代謝平衡與飲食控制<br>T: 2週內調整作息，1個月內穩定睡眠時數</td>
+                            <td class="p-4 border-b border-gray-200">S: 建立規律作息，每晚睡7-8小時<br>M: 以睡眠日誌或裝置記錄睡眠時數與品質<br>A: 若夜班工作或照顧需求彈性調整<br>R: 改善睡眠品質<br>T: 每月檢視睡眠成效</td>
                             <td class="p-4 border-b border-gray-200">使用睡眠APP或智慧手環記錄睡眠時數與品質</td>
                         </tr>
-                         <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">壓力管理</td>
                             <td class="p-4 border-b border-gray-200">每日練習10分鐘深呼吸或正念冥想</td>
-                            <td class="p-4 border-b border-gray-200">S: 每天練習10分鐘正念冥想與腹式呼吸<br>M: 每週累積冥想至少50分鐘，並記錄情緒變化<br>A: 針對照顧者負擔或低收入壓力者，安排線上資源或社區心理支持團體<br>R: 降低壓力有助於穩定血糖、提升睡眠品質<br>T: 4週內建立練習習慣，6週後回顧效果</td>
+                            <td class="p-4 border-b border-gray-200">S: 每天練習10分鐘正念冥想與腹式呼吸<br>M: 每週累積冥想至少50分鐘，並記錄情緒變化<br>A: 針對照顧壓力彈性調整<br>R: 改善心理壓力<br>T: 每月自評與追蹤</td>
                             <td class="p-4 border-b border-gray-200">每週心理壓力自評表、情緒日記</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">正向社會連結</td>
                             <td class="p-4 border-b border-gray-200">每週參加一次健康促進團體或家人支持活動</td>
-                            <td class="p-4 border-b border-gray-200">S: 每週參加1次健康社群或家人共食活動<br>M: 每月參與次數達4次，並撰寫簡短心得<br>A: 透過LINE群或社區資源安排活動<br>R: 強化人際關係有助於維持健康行為<br>T: 3個月內持續參與12次並回顧互動品質</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週參加1次健康社群或家人共食活動<br>M: 每月參與次數達4次，並撰寫簡短心得<br>A: 透過LINE群或社團平台分享<br>R: 增強社會支持<br>T: 每月統計參與情況</td>
                             <td class="p-4 border-b border-gray-200">參與記錄、分享心得、定期團體活動反饋</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 font-semibold">避免危害性物質使用</td>
                             <td class="p-4">停止抽菸、限制酒精攝取、不喝含糖飲料</td>
-                            <td class="p-4">S: 停止抽菸、減少含糖飲料與酒精攝取<br>M: 每週記錄攝取頻率，設定每月下降幅度<br>A: 參與戒菸門診與使用輔助工具<br>R: 降低風險因子有助於心血管與血糖健康<br>T: 3個月內戒菸成功，含糖飲料減至每月1次內</td>
+                            <td class="p-4">S: 停止抽菸、減少含糖飲料與酒精攝取<br>M: 每週記錄攝取頻率，設定每月下降幅度<br>A: 參與戒菸門診與使用輔助工具<br>R: 改善健康指標<br>T: 每月回診追蹤成效</td>
                             <td class="p-4">每月記錄使用頻率與情境、自我回饋問卷</td>
                         </tr>
                     </tbody>
@@ -352,181 +520,6 @@
                         link.classList.add('active');
                     }
                 });
-            });
-            
-            const chartFontColor = '#4A4A4A';
-            const chartGridColor = 'rgba(0, 0, 0, 0.05)';
-
-            // Chart.js: Classic Prizes
-            const classicPrizesCtx = document.getElementById('classicPrizesChart').getContext('2d');
-            new Chart(classicPrizesCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['金獎', '銀獎', '銅獎', '佳作'],
-                    datasets: [
-                        {
-                            label: '臨床個案報告組',
-                            data: [5000, 4000, 3000, 2000],
-                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                            borderColor: 'rgba(59, 130, 246, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: '出院準備服務導航組',
-                            data: [10000, 8000, 5000, 3000],
-                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                            borderColor: 'rgba(16, 185, 129, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: '生活型態設計組',
-                            data: [20000, 15000, 10000, 5000],
-                            backgroundColor: 'rgba(249, 115, 22, 0.7)',
-                            borderColor: 'rgba(249, 115, 22, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: chartFontColor },
-                            grid: { color: chartGridColor }
-                        },
-                        x: {
-                            ticks: { color: chartFontColor },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-
-            // Chart.js: Add-on Prizes
-            const addOnPrizesCtx = document.getElementById('addOnPrizesChart').getContext('2d');
-            new Chart(addOnPrizesCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['金獎', '銀獎', '銅獎', '佳作'],
-                    datasets: [{
-                        label: '獎金',
-                        data: [5000, 4000, 3000, 2000],
-                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
-                        borderColor: 'rgba(99, 102, 241, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed.y);
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: chartFontColor },
-                            grid: { color: chartGridColor }
-                        },
-                        x: {
-                            ticks: { color: chartFontColor },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-
-            // Chart.js: Classic Scoring
-            const classicScoringCtx = document.getElementById('classicScoringChart').getContext('2d');
-            new Chart(classicScoringCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Prompt設計結構', '輸出成果正確性、完整性', '報告流暢度、資料完整性'],
-                    datasets: [{
-                        data: [45, 45, 10],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.8)',
-                            'rgba(16, 185, 129, 0.8)',
-                            'rgba(249, 115, 22, 0.8)'
-                        ],
-                        borderColor: '#FDFBF7',
-                        borderWidth: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: chartFontColor } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.label}: ${context.raw}%`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Chart.js: Add-on Scoring
-            const addOnScoringCtx = document.getElementById('addOnScoringChart').getContext('2d');
-            new Chart(addOnScoringCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['內容正確性與故事性結構', 'AI應用創意', '吸引力/互動感', '視覺與音效表現'],
-                    datasets: [{
-                        data: [70, 20, 5, 5],
-                        backgroundColor: [
-                            'rgba(99, 102, 241, 0.8)',
-                            'rgba(234, 179, 8, 0.8)',
-                            'rgba(219, 39, 119, 0.8)',
-                            'rgba(13, 148, 136, 0.8)'
-                        ],
-                        borderColor: '#FDFBF7',
-                        borderWidth: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: chartFontColor } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.label}: ${context.raw}%`;
-                                }
-                            }
-                        }
-                    }
-                }
             });
         });
     </script>
