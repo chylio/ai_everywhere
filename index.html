@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 奇美醫院數位賦能創意應用競賽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral with Muted Blue Accent -->
+    <!-- Application Structure Plan: A top-down, single-page application with a sticky navigation bar for quick access to key sections: Overview, Competition Details, Schedule & Rules, Scoring & Prizes, and Resources. This structure is chosen for its simplicity and user-friendliness, allowing participants to either scroll through all information sequentially or jump directly to the section of interest. Interactive tabs are used for the 'Competition Details' to prevent information overload and allow for easy comparison between competition groups. Interactive charts are used for prizes and scoring to make quantitative data more digestible and impactful. -->
+    <!-- Visualization & Content Choices: 
+        - Competition Groups -> Goal: Organize/Compare -> Viz: Tabbed Interface -> Interaction: Click to switch content -> Justification: Allows users to focus on specific competition tracks without being overwhelmed.
+        - Prizes -> Goal: Compare -> Viz: Bar Chart (Chart.js) -> Interaction: Hover for tooltips -> Justification: Provides a quick, powerful visual comparison of prize money across different categories.
+        - Scoring Criteria -> Goal: Show Proportions -> Viz: Donut Chart (Chart.js) -> Interaction: Hover for tooltips -> Justification: Clearly illustrates the weight of each criterion in the final score.
+        - Schedule -> Goal: Show Sequence -> Viz: Vertical Timeline (HTML/CSS) -> Interaction: None -> Justification: More visually engaging and easier to follow than a simple list of dates.
+        - Appendix Table -> Goal: Inform -> Viz: Styled HTML Table -> Interaction: None -> Justification: Presents structured data in a clear, readable format.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF7;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #3B82F6;
+            border-bottom-color: #3B82F6;
+        }
+        .tab-btn.active {
+            background-color: #3B82F6;
+            color: #FFFFFF;
+        }
+        .tab-btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 0.25rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background-color: #FFFFFF;
+            border: 4px solid #3B82F6;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800">奇美醫院競賽</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">總覽</a>
+                <a href="#details" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">競賽詳情</a>
+                <a href="#schedule" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">時程與規則</a>
+                <a href="#scoring" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">評分與獎勵</a>
+                <a href="#resources" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">參考資料</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#overview" class="block py-2 text-gray-600">總覽</a>
+            <a href="#details" class="block py-2 text-gray-600">競賽詳情</a>
+            <a href="#schedule" class="block py-2 text-gray-600">時程與規則</a>
+            <a href="#scoring" class="block py-2 text-gray-600">評分與獎勵</a>
+            <a href="#resources" class="block py-2 text-gray-600">參考資料</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-16">
+
+        <!-- Section 1: Overview -->
+        <section id="overview" class="mb-24 text-center">
+            <h2 class="text-4xl font-bold text-blue-600 mb-4">2025 奇美醫院數位賦能創意應用競賽</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                本競賽旨在推動生成式AI於臨床照護的應用，並配合本院推動HIS Copilot，培養同仁整合生成式AI與臨床協作之能力。我們導入學習型健康系統(LHS)精神，強調資料驅動、回饋循環與持續改善，期能透過本次競賽推動院內智慧照護發展。
+            </p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">經典賽</h3>
+                    <p class="text-gray-600">【Prompt由你設計，專業由你定義】<br>擇一組別，運用AI工具完成臨床個案報告、出院準備服務計畫書或生活型態建議。</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">加碼賽</h3>
+                    <p class="text-gray-600">【照護由你啟動，影音讓醫病更靠近】<br>將經典賽成果轉製為易懂的衛教影音，完成即可獲加碼獎金。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Competition Details -->
+        <section id="details" class="mb-24">
+            <h2 class="text-3xl font-bold text-center mb-12">競賽詳情</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">本競賽分為「經典賽」與「加碼賽」。經典賽是主要賽事，參賽者需從三個專業組別中擇一參加，展現AI協作的專業能力。加碼賽則鼓勵團隊將專業成果轉化為親民的衛教影音，拉近醫病距離。點擊下方頁籤以深入了解各組別的目標與任務。</p>
+            <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100">
+                <div class="mb-8 flex flex-wrap justify-center gap-2">
+                    <button class="tab-btn active px-4 py-2 font-semibold rounded-lg" data-tab="tab1">臨床個案報告組</button>
+                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab2">出院準備服務導航組</button>
+                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab3">生活型態設計組</button>
+                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab4">加碼賽</button>
+                </div>
+                <div id="tab-content" class="min-h-[250px]">
+                    <div id="tab1" class="tab-pane active">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">臨床個案報告組</h3>
+                        <p class="text-gray-600">結合電子病歷資料與「巡房大聯盟」中的任一平台，完成一份符合指定 Case Reports 格式的個案報告，內容需包含摘要、背景、案例敘述、檢查、治療、討論、學習重點等。此組別考驗參賽者運用AI整理與撰寫複雜臨床資訊的能力。</p>
+                    </div>
+                    <div id="tab2" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">出院準備服務導航組</h3>
+                        <p class="text-gray-600">產出具全面性、整合性的「出院準備服務計畫書」。需結合醫師、護理師、營養師、社工師、物理治療師等多專業角色的照護建議，建立跨專業、連續性的出院準備服務計畫，提供病人及其家屬全面性的支持。</p>
+                    </div>
+                    <div id="tab3" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">生活型態設計組</h3>
+                        <p class="text-gray-600">聚焦於慢性病個案，以電子病歷資料出發，產出「個人生活型態建議」。此組別旨在培育同仁撰寫高品質Prompt的能力，透過大型語言模型(LLM)協作，精準指引系統產出個人化、適用於病人與家屬的生活型態建議。</p>
+                    </div>
+                    <div id="tab4" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">加碼賽：照護由你啟動，影音讓醫病更靠近</h3>
+                        <p class="text-gray-600">此為自由參賽項目。完成經典賽的隊伍，可透過各類生成式AI多媒體工具，將已完成的「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔，並可用於病人衛教、門診播放、遠距照護中。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Schedule & Rules -->
+        <section id="schedule" class="mb-24">
+            <h2 class="text-3xl font-bold text-center mb-12">時程與規則</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">掌握關鍵時程與競賽規則是成功的第一步。本區塊詳細列出從報名到各組別競賽日的完整時程，以及重要的參賽規則，請所有團隊務必詳閱。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Timeline -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-gray-800">競賽時程</h3>
+                    <div class="relative border-l-4 border-blue-200 pl-12">
+                        <div class="timeline-item mb-12">
+                            <p class="font-bold text-lg text-blue-600">即日起至 2025/09/01 (一) 17:00</p>
+                            <p class="text-gray-700">報名期間</p>
+                        </div>
+                        <div class="timeline-item mb-12">
+                            <p class="font-bold text-lg text-blue-600">2025/10/02 (四)</p>
+                            <p class="text-gray-700">【臨床個案報告組】競賽日</p>
+                        </div>
+                        <div class="timeline-item mb-12">
+                            <p class="font-bold text-lg text-blue-600">2025/10/09 (四)</p>
+                            <p class="text-gray-700">【出院準備服務導航組】競賽日</p>
+                        </div>
+                        <div class="timeline-item mb-12">
+                            <p class="font-bold text-lg text-blue-600">2025/10/23 (四)</p>
+                            <p class="text-gray-700">【生活型態設計組】競賽日</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="font-bold text-lg text-blue-600">另行通知</p>
+                            <p class="text-gray-700">【加碼賽】時程</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Rules -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-gray-800">參賽規則</h3>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                            <h4 class="font-bold text-lg mb-2">組隊要求</h4>
+                            <p>每組 3 人，須為跨單位組隊 (至少3個不同專業/科別)。全院同仁皆可參加。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                            <h4 class="font-bold text-lg mb-2">競賽方式</h4>
+                            <p>使用本院已架構之生成式AI工具，當日抽籤指定個案並產出組別成果。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                            <h4 class="font-bold text-lg mb-2">發表形式</h4>
+                            <p>成果以簡報呈現，每組現場發表 10 分鐘。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Scoring & Prizes -->
+        <section id="scoring" class="mb-24">
+            <h2 class="text-3xl font-bold text-center mb-12">評分與獎勵</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">豐厚的獎勵等待著優秀的團隊！本區塊將透過圖表清晰展示各組別的獎金結構與評分標準，讓您一目了然地了解評審的重點以及爭取高分的關鍵。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- Prizes -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-center text-gray-800">競賽獎勵</h3>
+                    <div class="mb-12">
+                        <h4 class="text-xl font-semibold text-center mb-4">經典賽獎金 (元)</h4>
+                        <div class="chart-container h-96">
+                            <canvas id="classicPrizesChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold text-center mb-4">加碼賽獎金 (元)</h4>
+                        <div class="chart-container h-80">
+                            <canvas id="addOnPrizesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scoring -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-center text-gray-800">評分標準</h3>
+                    <div class="mb-12">
+                        <h4 class="text-xl font-semibold text-center mb-4">經典賽評分權重</h4>
+                        <div class="chart-container h-80">
+                            <canvas id="classicScoringChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold text-center mb-4">加碼賽評分權重</h4>
+                        <div class="chart-container h-80">
+                            <canvas id="addOnScoringChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Resources -->
+        <section id="resources" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-12">參考資料</h2>
+             <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-12">為了協助參賽者更好地準備，我們提供了「個人生活型態建議書」的範例附件。此範例展示了如何運用S.M.A.R.T.原則設定具體、可衡量的健康目標，請參賽者（特別是生活型態設計組）詳閱，以了解成果的期望格式與深度。</p>
+            <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 overflow-x-auto">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">附件：個人生活型態建議書</h3>
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4 font-bold border-b-2 border-gray-200">生活型態支柱</th>
+                            <th class="p-4 font-bold border-b-2 border-gray-200">具體行動項目</th>
+                            <th class="p-4 font-bold border-b-2 border-gray-200">S.M.A.R.T.目標設定行動計畫</th>
+                            <th class="p-4 font-bold border-b-2 border-gray-200">評估與追蹤方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 border-b border-gray-200 font-semibold">營養</td>
+                            <td class="p-4 border-b border-gray-200">採用以全食物、植物為主的飲食，每日至少五份蔬果</td>
+                            <td class="p-4 border-b border-gray-200">S: 依個人經濟與文化背景，採用以全食物、植物為主的飲食，每日至少攝取5份蔬果<br>M: 透過每日飲食紀錄追蹤蔬果攝取量與三餐內容<br>A: 與營養師設計可行菜單並實行<br>R: 改善飲食有助於控制血糖與體重<br>T: 在4週內完成初步飲食轉換並持續執行</td>
+                            <td class="p-4 border-b border-gray-200">每日飲食紀錄、體重追蹤，每月回診檢視順從度</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 border-b border-gray-200 font-semibold">運動</td>
+                            <td class="p-4 border-b border-gray-200">每週150分鐘中度有氧運動、每週2次肌力訓練</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週進行快走並搭配2次居家肌力訓練<br>M: 使用APP或紙本紀錄每週運動次數與步數(目標150分鐘與7000步/天)<br>A: 運動強度依個人體能調整，循序漸進<br>R: 有助於改善胰島素敏感性與血糖控制<br>T: 6週內養成穩定運動習慣並每週追蹤</td>
+                            <td class="p-4 border-b border-gray-200">運動日誌記錄、步數紀錄、每月活動頻率統計</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 border-b border-gray-200 font-semibold">睡眠</td>
+                            <td class="p-4 border-b border-gray-200">每晚睡眠目標7-8小時，建立固定作息</td>
+                            <td class="p-4 border-b border-gray-200">S: 建立規律作息，每晚睡7-8小時<br>M: 以睡眠日誌或裝置記錄睡眠時數與品質<br>A: 若夜班工作或照顧家人無法達標，調整為日間短眠策略並轉介睡眠衛教<br>R: 提升睡眠有助於代謝平衡與飲食控制<br>T: 2週內調整作息，1個月內穩定睡眠時數</td>
+                            <td class="p-4 border-b border-gray-200">使用睡眠APP或智慧手環記錄睡眠時數與品質</td>
+                        </tr>
+                         <tr class="hover:bg-gray-50">
+                            <td class="p-4 border-b border-gray-200 font-semibold">壓力管理</td>
+                            <td class="p-4 border-b border-gray-200">每日練習10分鐘深呼吸或正念冥想</td>
+                            <td class="p-4 border-b border-gray-200">S: 每天練習10分鐘正念冥想與腹式呼吸<br>M: 每週累積冥想至少50分鐘，並記錄情緒變化<br>A: 針對照顧者負擔或低收入壓力者，安排線上資源或社區心理支持團體<br>R: 降低壓力有助於穩定血糖、提升睡眠品質<br>T: 4週內建立練習習慣，6週後回顧效果</td>
+                            <td class="p-4 border-b border-gray-200">每週心理壓力自評表、情緒日記</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 border-b border-gray-200 font-semibold">正向社會連結</td>
+                            <td class="p-4 border-b border-gray-200">每週參加一次健康促進團體或家人支持活動</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週參加1次健康社群或家人共食活動<br>M: 每月參與次數達4次，並撰寫簡短心得<br>A: 透過LINE群或社區資源安排活動<br>R: 強化人際關係有助於維持健康行為<br>T: 3個月內持續參與12次並回顧互動品質</td>
+                            <td class="p-4 border-b border-gray-200">參與記錄、分享心得、定期團體活動反饋</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 font-semibold">避免危害性物質使用</td>
+                            <td class="p-4">停止抽菸、限制酒精攝取、不喝含糖飲料</td>
+                            <td class="p-4">S: 停止抽菸、減少含糖飲料與酒精攝取<br>M: 每週記錄攝取頻率，設定每月下降幅度<br>A: 參與戒菸門診與使用輔助工具<br>R: 降低風險因子有助於心血管與血糖健康<br>T: 3個月內戒菸成功，含糖飲料減至每月1次內</td>
+                            <td class="p-4">每月記錄使用頻率與情境、自我回饋問卷</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>主辦單位保留隨時修正、暫停或終止本活動之權利，如有變動將另行公告。</p>
+            <p class="mt-2 text-sm text-gray-400">&copy; 2025 奇美醫院數位賦能創意應用競賽</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === tabId) {
+                            pane.classList.remove('hidden');
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.add('hidden');
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Nav link active state on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            const chartFontColor = '#4A4A4A';
+            const chartGridColor = 'rgba(0, 0, 0, 0.05)';
+
+            // Chart.js: Classic Prizes
+            const classicPrizesCtx = document.getElementById('classicPrizesChart').getContext('2d');
+            new Chart(classicPrizesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['金獎', '銀獎', '銅獎', '佳作'],
+                    datasets: [
+                        {
+                            label: '臨床個案報告組',
+                            data: [5000, 4000, 3000, 2000],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '出院準備服務導航組',
+                            data: [10000, 8000, 5000, 3000],
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '生活型態設計組',
+                            data: [20000, 15000, 10000, 5000],
+                            backgroundColor: 'rgba(249, 115, 22, 0.7)',
+                            borderColor: 'rgba(249, 115, 22, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: chartFontColor },
+                            grid: { color: chartGridColor }
+                        },
+                        x: {
+                            ticks: { color: chartFontColor },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Chart.js: Add-on Prizes
+            const addOnPrizesCtx = document.getElementById('addOnPrizesChart').getContext('2d');
+            new Chart(addOnPrizesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['金獎', '銀獎', '銅獎', '佳作'],
+                    datasets: [{
+                        label: '獎金',
+                        data: [5000, 4000, 3000, 2000],
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: chartFontColor },
+                            grid: { color: chartGridColor }
+                        },
+                        x: {
+                            ticks: { color: chartFontColor },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Chart.js: Classic Scoring
+            const classicScoringCtx = document.getElementById('classicScoringChart').getContext('2d');
+            new Chart(classicScoringCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Prompt設計結構', '輸出成果正確性、完整性', '報告流暢度、資料完整性'],
+                    datasets: [{
+                        data: [45, 45, 10],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(249, 115, 22, 0.8)'
+                        ],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: chartFontColor } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart.js: Add-on Scoring
+            const addOnScoringCtx = document.getElementById('addOnScoringChart').getContext('2d');
+            new Chart(addOnScoringCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['內容正確性與故事性結構', 'AI應用創意', '吸引力/互動感', '視覺與音效表現'],
+                    datasets: [{
+                        data: [70, 20, 5, 5],
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(219, 39, 119, 0.8)',
+                            'rgba(13, 148, 136, 0.8)'
+                        ],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: chartFontColor } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
