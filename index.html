@@ -115,6 +115,8 @@
             .prize-flex { flex-direction: row; }
         }
         .prize-flex { display: flex; flex-direction: column; gap: 2.5rem; }
+        /* 讓長網址自動換行 */
+        .break-all { word-break: break-all; }
     </style>
 </head>
 <body class="antialiased">
@@ -289,7 +291,7 @@
                                     <span class="score-label text-blue-700">經典賽</span>
                                     <ul class="list-disc pl-5 text-gray-700 mt-2 mb-2 leading-relaxed">
                                         <li>使用本院已架構之生成式AI工具，如：奇幫手、巡房大聯盟中各職類GAI平台、我要問、繼續問介面協作，當日抽籤指定。</li>
-                                        <li>參考資料：<span class="text-blue-700 font-bold">巡防大聯盟操作可參考院內影音平台→數位技能</span></li>
+                                        <li>參考資料：<span class="text-blue-700 font-bold">巡房大聯盟操作可參考院內影音平台→數位技能</span></li>
                                     </ul>
                                 </div>
                                 <div>
@@ -487,7 +489,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- 表格內容略（前內容同前） -->
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">營養</td>
                             <td class="p-4 border-b border-gray-200">採用以全食物、植物為主的飲食，每日至少五份蔬果</td>
@@ -531,12 +532,10 @@
                     <h4 class="text-xl font-bold text-blue-800 mb-4">參考資料</h4>
                     <ol class="list-decimal list-inside text-gray-800 space-y-2">
                         <li>
-                            Prompt微軟線上學習資源
-                            <ul class="list-disc list-inside ml-4 text-blue-700 space-y-1">
-                                <li>
-                                    <a href="https://learn.microsoft.com/zh-tw/azure/ai-foundry/openai/concepts/prompt-engineering?tabs=completion&fbclid=IwY2xjawLuuQJleHRuA2FlbQIxMAABHjRp9gO0COXdJFKRjEgDVKFzFYkdn4OrhZ9fr_BWmMBL_lF04CiGGGifDRRr_aem_90almwdIwaQQZ9gPeaH1KQ</a>
-                                </li>
-                            </ul>
+                            <a href="https://learn.microsoft.com/zh-tw/azure/ai-foundry/openai/concepts/prompt-engineering?tabs=completion&fbclid=IwY2xjawLuuQJleHRuA2FlbQIxMAABHjRp9gO0COXdJFKRjFgDVKFzFYkdn4OrhZ9fr_BWmMBL_lF04CiGGGifDRRr_aem_90almwdIwaQQZ9gPeaH1KQ"
+                               target="_blank" class="underline hover:text-blue-500 font-bold">
+                                Prompt微軟線上學習資源
+                            </a>
                         </li>
                         <li>
                             Case Report範例參考
