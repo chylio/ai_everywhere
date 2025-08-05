@@ -19,29 +19,102 @@
             color: #3B82F6;
             border-bottom-color: #3B82F6;
         }
-        .tab-btn.active {
-            background-color: #3B82F6;
-            color: #FFFFFF;
+        .tab-btn-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 12px rgba(100, 116, 139, 0.09);
+            padding: 1.2rem 0.5rem;
+            border: 1px solid #e2e8f0;
+            color: #34495e;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            transition: all 0.2s;
         }
-        .tab-btn {
-            transition: background-color 0.3s, color 0.3s;
-            min-width: 180px;
+        .tab-btn-card.active {
+            background: linear-gradient(90deg, #e0e7ff 0%, #f3f4fd 100%);
+            color: #3B82F6;
+            box-shadow: 0 4px 16px #eaeaea;
+            border: 1.5px solid #c7d2fe;
         }
-        .score-card {
-            box-shadow: 0 2px 8px #eaeaea;
+        .tab-btn-card:focus {
+            outline: none;
+            border-color: #6366f1;
         }
+        .tab-btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 12px rgba(100, 116, 139, 0.08);
+            padding: 2rem 2rem 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        .section-title {
+            color: #34495e;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .section-desc {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-ref {
+            background: #e0e7ff;
+            border-radius: 0.75rem;
+            padding: 0.8rem 1rem;
+            color: #475569;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        /* 加碼賽醫治風格設計 */
+        .bonus-info {
+            background: linear-gradient(90deg, #eafbf3 0%, #eaf3fd 100%);
+            border-left: 8px solid #38b2ac;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px #eaeaea;
+            color: #276678;
+            margin-bottom: 1rem;
+            padding: 1.2rem 1.5rem;
+        }
+        .bonus-title {
+            color: #276678;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .bonus-prize {
+            color: #38b2ac;
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+        .bonus-list {
+            color: #276678;
+            margin-top: 1rem;
+        }
+        .nowrap-title { white-space: nowrap; }
         .center-title { text-align: center !important; }
         .center-cards { justify-content: center; }
         .wide-card { min-width: 370px; max-width: 430px; width: 100%; }
-        .bonus-info {
-            background: linear-gradient(90deg, #e0e7ff 0%, #f3f4fd 100%);
-            border-left: 8px solid #6366f1;
-            border-radius: 1rem;
-            box-shadow: 0 4px 16px #eaeaea;
+        .score-card { box-shadow: 0 2px 8px #eaeaea; }
+        @media (max-width: 900px) {
+            .tab-btn-group { flex-direction: column; gap: 1rem; }
+            .tab-btn-card { margin: 0; }
+        }
+        @media (min-width: 1000px) {
+            .prize-flex { flex-direction: row; }
         }
         .prize-flex { display: flex; flex-direction: column; gap: 2.5rem; }
-        @media (min-width: 1000px) { .prize-flex { flex-direction: row; } }
-        .nowrap-title { white-space: nowrap; }
     </style>
 </head>
 <body class="antialiased">
@@ -78,7 +151,7 @@
         <section id="overview" class="mb-24 text-center">
             <h2 class="text-4xl font-bold text-blue-600 mb-4 center-title">2025 奇美醫院數位賦能創意應用競賽</h2>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto center-title">
-                本競賽旨在推動生成式AI於臨床照護的應用，並配合本院推動HIS Copilot，培養同仁整合生成式AI與臨床協作之能力。我們導入學習型健康系統（LHS）概念，鼓勵同仁發揮創意，提出具體可行的解決方案，提升醫療服務品質與效率。
+                本競賽旨在推動生成式AI於臨床照護的應用，並配合本院推動HIS Copilot，培養同仁整合生成式AI與臨床協作之能力。我們導入學習型健康系統，促進臨床創新。
             </p>
             <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
@@ -94,76 +167,70 @@
 
         <!-- Section 2: Competition Details -->
         <section id="details" class="mb-24">
-             <h2 class="text-3xl font-bold mb-8 section-title">競賽詳情</h2>
+            <h2 class="text-3xl font-bold mb-8 section-title">競賽詳情</h2>
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100">
-                <div class="mb-8 flex justify-center gap-14">
-                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab1">臨床個案報告組</button>
-                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab2">出院準備服務導航組</button>
-                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab3">生活型態設計組</button>
-                    <button class="tab-btn px-4 py-2 font-semibold rounded-lg" data-tab="tab4">加碼賽</button>
+
+                <!-- 設計感 Tab 按鈕區 -->
+                <div class="tab-btn-group">
+                    <button class="tab-btn-card active" data-tab="tab1">臨床個案報告組</button>
+                    <button class="tab-btn-card" data-tab="tab2">出院準備服務導航組</button>
+                    <button class="tab-btn-card" data-tab="tab3">生活型態設計組</button>
+                    <button class="tab-btn-card" data-tab="tab4">加碼賽</button>
                 </div>
-                <!-- 標題在顏色卡片外面，內容卡片顏色區塊 -->
                 <div id="tab-content" class="min-h-[250px]">
                   <!-- 臨床個案報告組 -->
                   <div id="tab1" class="tab-pane active">
-                    <div class="w-full md:w-[1200px] mx-auto">
-                      <h3 class="text-2xl font-bold text-blue-800 mb-4">臨床個案報告組</h3>
-                      <div class="bg-[#eaf3fd] border-l-8 border-blue-400 rounded-xl shadow p-8 text-left">
-                        <h4 class="text-xl font-bold text-blue-700 mb-3">組別說明</h4>
-                        <p class="text-gray-700 font-semibold mb-4">
-                          臨床個案報告，結合電子病歷資料與「巡房大聯盟」中的任一平台，完成一份符合指定Case Reports格式的個案報告（含摘要、背景、案例敘述、檢查、治療、討論、學習重點等）。
-                        </p>
-                        <div class="bg-blue-100 rounded-lg p-3 my-2">
-                          <span class="font-bold text-blue-800">參考資料：</span>
-                          <a class="ref-link" href="https://casereports.bmj.com/pages/authors/#how_to_write" target="_blank">https://casereports.bmj.com/pages/authors/#how_to_write</a>
-                        </div>
+                    <div class="section-card">
+                      <h3 class="section-title">臨床個案報告組</h3>
+                      <div class="section-desc">
+                        臨床個案報告，結合電子病歷資料與「巡房大聯盟」中的任一平台，完成一份符合指定Case Reports格式的個案報告（含摘要、背景、案例敘述、檢查、治療、討論、學習重點等）。
+                      </div>
+                      <div class="section-ref">
+                        <strong>參考資料：</strong>
+                        <a href="https://casereports.bmj.com/pages/authors/#how_to_write" target="_blank">https://casereports.bmj.com/pages/authors/#how_to_write</a>
                       </div>
                     </div>
                   </div>
                   <!-- 出院準備服務導航組 -->
                   <div id="tab2" class="tab-pane hidden">
-                    <div class="w-full md:w-[1200px] mx-auto">
-                      <h3 class="text-2xl font-bold text-green-800 mb-4">出院準備服務導航組</h3>
-                      <div class="bg-[#eafbf3] border-l-8 border-green-400 rounded-xl shadow p-8 text-left">
-                        <h4 class="text-xl font-bold text-green-700 mb-3">組別說明</h4>
-                        <p class="text-gray-700 font-semibold mb-4">
-                          產出具全面性、整合性的「出院準備服務計畫書 」結合醫師、專師、護理師、營養師、社工師、物理治療師、出院準備專責護理師等多專業角色的照護建議之資訊需求，建立跨專業、連續性的出院準備服務計畫書，提供全面、整合性的服務，協助病人及其家屬順利過渡到出院後的居家生活，並獲得持續性的支持和照護。
-                        </p>
-                        <div class="bg-green-100 rounded-lg p-3 my-2">
-                          <span class="font-bold text-green-800">參考資料：</span>
-                          <a class="ref-link" href="https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html" target="_blank">https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html</a>
-                        </div>
+                    <div class="section-card">
+                      <h3 class="section-title">出院準備服務導航組</h3>
+                      <div class="section-desc">
+                        產出具全面性、整合性的「出院準備服務計畫書 」結合醫師、專師、護理師、營養師、社工師、物理治療師、出院準備專責護理師等，依國際指引與個別性需求訂定照護規劃。
+                      </div>
+                      <div class="section-ref">
+                        <strong>參考資料：</strong>
+                        <a href="https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html" target="_blank">https://www.ahrq.gov/patient-safety/patients-families/engagingfamilies/strategy4/index.html</a>
                       </div>
                     </div>
                   </div>
                   <!-- 生活型態設計組 -->
                   <div id="tab3" class="tab-pane hidden">
-                    <div class="w-full md:w-[1200px] mx-auto">
-                      <h3 class="text-2xl font-bold text-orange-700 mb-4">生活型態設計組</h3>
-                      <div class="bg-[#fef6ee] border-l-8 border-orange-400 rounded-xl shadow p-8 text-left">
-                        <h4 class="text-xl font-bold text-orange-700 mb-3">組別說明</h4>
-                        <p class="text-gray-700 font-semibold mb-4">
-                          根據疾病狀態產出「個人生活型態建議」以電子病歷資料出發，聚焦於慢性病個案，強化對生活型態醫學介入策略之理解與連結，同時培育同仁撰寫高品質Prompt的能力，透過大型語言模型（LLM）協作具臨床價值的資訊與建議，精準指引「HIS Copilot」系統產出個人化、適用於病人與家屬的生活型態建議，協助病人在就醫間隔期間進行自我健康管理與行為改變。
-                        </p>
-                        <div class="bg-orange-100 rounded-lg p-3 my-2">
-                          <span class="font-bold text-orange-700">參考資料：</span>
-                          <a class="ref-link" href="https://journals.sagepub.com/doi/full/10.1177/15598276251325488" target="_blank">https://journals.sagepub.com/doi/full/10.1177/15598276251325488</a>
-                        </div>
+                    <div class="section-card">
+                      <h3 class="section-title">生活型態設計組</h3>
+                      <div class="section-desc">
+                        根據疾病狀態產出「個人生活型態建議」以電子病歷資料出發，聚焦於慢性病個案，強化對生活型態醫學介入策略之理解與連結，同時參考S.M.A.R.T目標設定。
+                      </div>
+                      <div class="section-ref">
+                        <strong>參考資料：</strong>
+                        <a href="https://journals.sagepub.com/doi/full/10.1177/15598276251325488" target="_blank">https://journals.sagepub.com/doi/full/10.1177/15598276251325488</a>
                       </div>
                     </div>
                   </div>
-                  <!-- 加碼賽：正確內容 -->
+                  <!-- 加碼賽：醫治風格設計 -->
                   <div id="tab4" class="tab-pane hidden">
-                    <div class="w-full md:w-[1200px] mx-auto">
-                      <h3 class="text-2xl font-bold text-indigo-900 mb-4">加碼賽：照護由你啟動，影音讓醫病更靠近</h3>
-                      <div class="bg-[#f2f3fe] border-l-8 border-indigo-400 rounded-xl shadow p-8 text-left">
-                        <h4 class="text-xl font-bold text-indigo-700 mb-3">加碼獎金說明</h4>
-                        <p class="text-gray-700 font-semibold mb-4">
-                          透過各類生成式AI多媒體工具，將已完成的「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔，並可於病人衛教、門診播放、遠距照護中使用。
-                          <br><span class="font-bold block mt-2">可自由參賽，若完成經典賽且繳交影音作品可獲得加碼獎金 <span class="text-indigo-700 font-extrabold text-xl">2,000元</span>。</span>
-                        </p>
-                        <ul class="mt-2 text-indigo-700 list-disc list-inside">
-                          <li>不限專業、自由參與</li>
+                    <div class="section-card">
+                      <h3 class="bonus-title">加碼賽：照護由你啟動，影音讓醫病更靠近</h3>
+                      <div class="bonus-info">
+                        <div>
+                          透過各類生成式AI多媒體工具，將已完成的「生活型態建議」或「出院準備服務計畫書」轉製為病人、照顧者可理解之影音檔，並可應用於病人衛教/門診播放/遠距照護。
+                        </div>
+                        <div class="font-bold mt-2" style="color:#276678;">
+                          可自由參賽，若完成經典賽且繳交影音作品可獲得加碼獎金
+                          <span class="bonus-prize">2,000元</span>
+                        </div>
+                        <ul class="bonus-list list-disc list-inside">
+                          <li>不限專業，自由參與</li>
                           <li>可個人或組隊（經典賽完成後皆可參加）</li>
                           <li>作品需以AI工具產出影音，內容需易於病人與家屬理解</li>
                           <li>可應用於病人衛教/門診播放/遠距照護</li>
@@ -221,7 +288,7 @@
                                 <div class="mb-4">
                                     <span class="score-label text-blue-700">經典賽</span>
                                     <ul class="list-disc pl-5 text-gray-700 mt-2 mb-2 leading-relaxed">
-                                        <li>使用本院已架構之生成式AI工具，如：奇幫手、巡房大聯盟中各職類GAI平台、我要問、繼續問介面協作，當日抽籤指定個案並產出組別的成果如「個人生活型態建議」、「出院準備服務計畫書」或「臨床個案報告」。</li>
+                                        <li>使用本院已架構之生成式AI工具，如：奇幫手、巡房大聯盟中各職類GAI平台、我要問、繼續問介面協作，當日抽籤指定題目。</li>
                                         <li>參考資料：<span class="text-blue-700 font-bold">巡防大聯盟操作可參考院內影音平台→數位技能</span></li>
                                     </ul>
                                 </div>
@@ -245,7 +312,7 @@
 
         <!-- Section 4: Scoring & Prizes -->
         <section id="scoring" class="mb-24">
-            <h2 class="text-3xl font-bold mb-12 section-title text-left">經典賽評分標準 <span class="text-base font-normal text-gray-2000">100%</span></h2>
+            <h2 class="text-3xl font-bold mb-12 section-title text-left">經典賽評分標準 <span class="text-base font-normal text-gray-2000"></span></h2>
             <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-8">
                 <div class="flex flex-col md:flex-row gap-8 center-cards">
                     <!-- 卡片1：Prompt設計結構 -->
@@ -273,7 +340,7 @@
                                 </tr>
                                 <tr>
                                     <td class="py-2 px-2 border-b border-gray-100">輸入與輸出格式設計</td>
-                                    <td class="py-2 px-2 border-b border-gray-100">輸入資料或內容與輸出格式明確，提升模型解析與穩定性、迴代次數、回應內容查驗與改寫紀錄。</td>
+                                    <td class="py-2 px-2 border-b border-gray-100">輸入資料或內容與輸出格式明確，提升模型解析與穩定性、迴代次數、回應內容查驗與改進。</td>
                                     <td class="py-2 px-2 border-b border-gray-100 text-center font-bold text-blue-700">10</td>
                                 </tr>
                                 <tr>
@@ -307,11 +374,11 @@
                             </div>
                             <div class="rounded-xl border border-blue-200 bg-blue-50 p-4">
                                 <span class="font-bold text-blue-700 text-lg block mb-1">出院準備服務導航組</span>
-                                <span class="text-gray-800">出院準備服務計畫書：參考國際、國內相關指引，整合醫療及社會資源，考量個別性照護需求並訂規劃（如：居家護理、復能、端息、復健、輔具需求），以保障持續性、就近性的照護。</span>
+                                <span class="text-gray-800">出院準備服務計畫書：參考國際、國內相關指引，整合醫療及社會資源，考量個別性照護需求並訂規劃。</span>
                             </div>
                             <div class="rounded-xl border border-orange-200 bg-orange-50 p-4">
                                 <span class="font-bold text-orange-700 text-lg block mb-1">生活型態設計組</span>
-                                <span class="text-gray-800">個人生活型態建議（參考附件）：考量個案的健康社會決定因素，利用S.M.A.R.T.目標設定格式讓建議具備可行性、行動計畫與策略、評估與追蹤方式。</span>
+                                <span class="text-gray-800">個人生活型態建議（參考附件）：考量個案的健康社會決定因素，利用S.M.A.R.T.目標設定格式讓建議具備可追蹤性。</span>
                             </div>
                         </div>
                     </div>
@@ -407,7 +474,7 @@
         <!-- Section 6: Resources -->
         <section id="resources" class="mb-16">
             <h2 class="text-3xl font-bold mb-12 section-title">參考資料</h2>
-            <p class="text-lg text-gray-600 section-desc mb-12">為了協助參賽者更好地準備，我們提供了「個人生活型態建議書」的範例附件。此範例展示了建議書的撰寫方式，供各組參考。</p>
+            <p class="text-lg text-gray-600 section-desc mb-12">為了協助參賽者更好地準備，我們提供了「個人生活型態建議書」的範例附件。此範例展示了建議書的內容結構與S.M.A.R.T.目標設定，作為設計參考。</p>
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 overflow-x-auto">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6 section-title">附件：個人生活型態建議書</h3>
                 <table class="w-full text-left border-collapse">
@@ -423,37 +490,37 @@
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">營養</td>
                             <td class="p-4 border-b border-gray-200">採用以全食物、植物為主的飲食，每日至少五份蔬果</td>
-                            <td class="p-4 border-b border-gray-200">S: 依個人經濟與文化背景，採用以全食物、植物為主的飲食，每日至少攝取5份蔬果<br>M: 透過每日飲食紀錄追蹤攝取量<br>A: 根據個人情況調整<br>R: 改善健康指標<br>T: 每月回診檢視順從度</td>
+                            <td class="p-4 border-b border-gray-200">S: 依個人經濟與文化背景，採用以全食物、植物為主的飲食，每日至少攝取5份蔬果<br>M: 透過每日飲食紀錄追蹤<br>A: 依個人能力調整<br>R: 設定每週達成比例<br>T: 每月檢視達成率</td>
                             <td class="p-4 border-b border-gray-200">每日飲食紀錄、體重追蹤，每月回診檢視順從度</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">運動</td>
                             <td class="p-4 border-b border-gray-200">每週150分鐘中度有氧運動、每週2次肌力訓練</td>
-                            <td class="p-4 border-b border-gray-200">S: 每週進行快走並搭配2次居家肌力訓練<br>M: 使用APP或紙本紀錄每週運動次數與步數(目標150分鐘與7000步)<br>A: 按個人身體狀況調整<br>R: 增強心肺功能<br>T: 每月追蹤運動頻率</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週進行快走並搭配2次居家肌力訓練<br>M: 使用APP或紙本紀錄每週運動次數與步數(目標150分鐘與7000步)<br>A: 依個人健康與能力調整<br>R: 設定每週運動目標<br>T: 每月檢視紀錄</td>
                             <td class="p-4 border-b border-gray-200">運動日誌記錄、步數紀錄、每月活動頻率統計</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">睡眠</td>
                             <td class="p-4 border-b border-gray-200">每晚睡眠目標7-8小時，建立固定作息</td>
-                            <td class="p-4 border-b border-gray-200">S: 建立規律作息，每晚睡7-8小時<br>M: 以睡眠日誌或裝置記錄睡眠時數與品質<br>A: 若夜班工作或照顧需求彈性調整<br>R: 改善睡眠品質<br>T: 每月檢視睡眠成效</td>
+                            <td class="p-4 border-b border-gray-200">S: 建立規律作息，每晚睡7-8小時<br>M: 以睡眠日誌或裝置記錄睡眠時數與品質<br>A: 若夜班工作或照顧者則調整目標<br>R: 評估睡眠品質<br>T: 每月檢視</td>
                             <td class="p-4 border-b border-gray-200">使用睡眠APP或智慧手環記錄睡眠時數與品質</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">壓力管理</td>
                             <td class="p-4 border-b border-gray-200">每日練習10分鐘深呼吸或正念冥想</td>
-                            <td class="p-4 border-b border-gray-200">S: 每天練習10分鐘正念冥想與腹式呼吸<br>M: 每週累積冥想至少50分鐘，並記錄情緒變化<br>A: 針對照顧壓力彈性調整<br>R: 改善心理壓力<br>T: 每月自評與追蹤</td>
+                            <td class="p-4 border-b border-gray-200">S: 每天練習10分鐘正念冥想與腹式呼吸<br>M: 每週累積冥想至少50分鐘，並記錄情緒變化<br>A: 針對照顧者壓力特別調整<br>R: 評估壓力指數<br>T: 每月檢視</td>
                             <td class="p-4 border-b border-gray-200">每週心理壓力自評表、情緒日記</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 border-b border-gray-200 font-semibold">正向社會連結</td>
                             <td class="p-4 border-b border-gray-200">每週參加一次健康促進團體或家人支持活動</td>
-                            <td class="p-4 border-b border-gray-200">S: 每週參加1次健康社群或家人共食活動<br>M: 每月參與次數達4次，並撰寫簡短心得<br>A: 透過LINE群或社團平台分享<br>R: 增強社會支持<br>T: 每月統計參與情況</td>
+                            <td class="p-4 border-b border-gray-200">S: 每週參加1次健康社群或家人共食活動<br>M: 每月參與次數達4次，並撰寫簡短心得<br>A: 依個人意願調整<br>R: 評估社交參與度<br>T: 每月檢視</td>
                             <td class="p-4 border-b border-gray-200">參與記錄、分享心得、定期團體活動反饋</td>
                         </tr>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 font-semibold">避免危害性物質使用</td>
                             <td class="p-4">停止抽菸、限制酒精攝取、不喝含糖飲料</td>
-                            <td class="p-4">S: 停止抽菸、減少含糖飲料與酒精攝取<br>M: 每週記錄攝取頻率，設定每月下降幅度<br>A: 參與戒菸門診與使用輔助工具<br>R: 改善健康指標<br>T: 每月回診追蹤成效</td>
+                            <td class="p-4">S: 停止抽菸、減少含糖飲料與酒精攝取<br>M: 每週記錄攝取頻率，設定每月下降幅度<br>A: 參與戒菸門診與使用輔助工具<br>R: 評估使用頻率下降<br>T: 每月檢視</td>
                             <td class="p-4">每月記錄使用頻率與情境、自我回饋問卷</td>
                         </tr>
                     </tbody>
@@ -479,7 +546,7 @@
             });
 
             // Tab functionality
-            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabButtons = document.querySelectorAll('.tab-btn-card');
             const tabPanes = document.querySelectorAll('.tab-pane');
 
             tabButtons.forEach(button => {
